@@ -34,8 +34,8 @@ export abstract class Abstract<T extends TeamSpeakQuery.ResponseEntry> {
   }
 
   /** updates the cache with the given object */
-  updateCache(info: TeamSpeakQuery.ResponseEntry) {
-        var changes = this.objectCopy(this.propcache, info)
+  updateCache(props: TeamSpeakQuery.ResponseEntry) {
+        var changes = this.objectCopy(this.propcache, props)
         if (Object.values(changes).length === 0) return
         Object
           .values(changes)
