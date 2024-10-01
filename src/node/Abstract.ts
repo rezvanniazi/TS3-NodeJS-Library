@@ -34,10 +34,32 @@ export abstract class Abstract<T extends TeamSpeakQuery.ResponseEntry> {
   }
 
   /** updates the cache with the given object */
-  updateCache(props: TeamSpeakQuery.ResponseEntry) {
-    this.propcache = { ...this.propcache, ...props}
-    return this
-  }
+  updateCache(info: TeamSpeakQuery.ResponseEntry) {
+        var changes = this.objectCopy(this.propcache, info)
+        if (Object.values(changes).length === 0) return
+        Object
+          .values(changes)
+          /**
+           * Single Property Change event
+           *
+           * @event Abstract#update_<property>
+           * @memberof Abstract
+           * @type {object}
+           * @property {any} from - the old value
+           * @property {any} to - the new value
+           */
+          .forEach(prop => this.emit("update_"+prop, changes[prop]))
+        /**
+         * Property Change event, will retrieve all changed properties in an array
+         *
+         * @event Abstract#update
+         * @memberof Abstract
+         * @type {object[]} change
+         * @property {any} change[].from - the old value
+         * @property {any} change[].to - the new value
+         */
+        this.emit("update", changes)
+    }
 
   /** returns the parent class */
   getParent() {
